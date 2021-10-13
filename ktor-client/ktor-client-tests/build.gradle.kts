@@ -110,7 +110,7 @@ kotlin.sourceSets {
         if (!IDEA_ACTIVE) {
             listOf("linuxX64Test", "mingwX64Test", "macosX64Test").map { getByName(it) }.forEach {
                 it.dependencies {
-                    api(project(":ktor-client:ktor-client-curl"))
+//                    api(project(":ktor-client:ktor-client-curl"))
                 }
             }
 
@@ -129,7 +129,7 @@ kotlin.sourceSets {
         } else {
             val posixTest by getting {
                 dependencies {
-                    api(project(":ktor-client:ktor-client-curl"))
+//                    api(project(":ktor-client:ktor-client-curl"))
                 }
             }
             val nixTest by getting {
@@ -191,7 +191,7 @@ rootProject.allprojects {
                 if (name == "nixTest") {
                     getByName(name) {
                         dependencies {
-                            api(project(":ktor-client:ktor-client-curl"))
+//                            api(project(":ktor-client:ktor-client-curl"))
                         }
                     }
                 }
@@ -200,7 +200,7 @@ rootProject.allprojects {
             if (name in listOf("macosX64Test", "linuxX64Test")) {
                 getByName(name) {
                     dependencies {
-                        api(project(":ktor-client:ktor-client-curl"))
+//                        api(project(":ktor-client:ktor-client-curl"))
                         api(project(":ktor-client:ktor-client-cio"))
                     }
                 }
@@ -215,7 +215,7 @@ rootProject.allprojects {
             if (name == "mingwX64Test") {
                 getByName(name) {
                     dependencies {
-                        api(project(":ktor-client:ktor-client-curl"))
+//                        api(project(":ktor-client:ktor-client-curl"))
                     }
                 }
             }

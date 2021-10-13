@@ -5,6 +5,7 @@
 package io.ktor.tests.server.cio
 
 import io.ktor.server.cio.*
+import io.ktor.server.testing.*
 import io.ktor.server.testing.suites.*
 
 class CIOCompressionTest : CompressionTestSuite<CIOApplicationEngine, CIOApplicationEngine.Configuration>(CIO) {
@@ -21,7 +22,15 @@ class CIOContentTest : ContentTestSuite<CIOApplicationEngine, CIOApplicationEngi
     }
 }
 
-class CIOHttpServerTest : HttpServerTestSuite<CIOApplicationEngine, CIOApplicationEngine.Configuration>(CIO) {
+
+class CIOHttpServerCommonTest : HttpServerCommonTestSuite<CIOApplicationEngine, CIOApplicationEngine.Configuration>(CIO) {
+    init {
+        enableHttp2 = false
+        enableSsl = false
+    }
+}
+
+class CIOHttpServerJvmTest : HttpServerJvmTestSuite<CIOApplicationEngine, CIOApplicationEngine.Configuration>(CIO) {
     init {
         enableHttp2 = false
         enableSsl = false

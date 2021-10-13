@@ -22,3 +22,7 @@ static inline int select_fd_isset(int descriptor, fd_set* set) {
 static inline const char *ktor_inet_ntop(int af, const void *src, char *dst, socklen_t size) {
     return inet_ntop(af, src, dst, size);
 }
+
+static inline int pselect_bridge(int nfds, fd_set *restrict readfds, fd_set *restrict writefds, fd_set *errorfds) {
+    return pselect(nfds, readfds, writefds, errorfds, 0, 0);
+}

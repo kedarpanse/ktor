@@ -5,9 +5,12 @@
 package io.ktor.client.engine.apache
 
 import io.ktor.client.request.*
+import io.ktor.content.*
 import io.ktor.http.*
 import io.ktor.http.HttpHeaders
 import io.ktor.http.content.*
+import io.ktor.http.content.ByteArrayContent
+import io.ktor.http.content.TextContent
 import io.ktor.util.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.*

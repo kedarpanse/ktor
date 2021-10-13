@@ -18,11 +18,5 @@ kotlin {
                 api(project(":ktor-test-dispatcher"))
             }
         }
-
-        val jsTest by getting {
-            dependencies {
-                implementation(kotlin("test-js"))
-            }
-        }
     }
 }

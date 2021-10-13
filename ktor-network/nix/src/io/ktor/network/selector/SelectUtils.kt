@@ -80,7 +80,7 @@ internal class SelectorHelper {
                 continue
             }
 
-            pselect(maxDescriptor + 1, readSet.ptr, writeSet.ptr, errorSet.ptr, null, null)
+            pselect_bridge(maxDescriptor + 1, readSet.ptr, writeSet.ptr, errorSet.ptr)
                 .check()
 
             processSelectedEvents(watchSet, closeSet, completed, readSet, writeSet, errorSet)

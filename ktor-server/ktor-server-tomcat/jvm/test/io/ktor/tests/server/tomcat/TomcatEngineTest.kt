@@ -11,6 +11,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.servlet.*
+import io.ktor.server.testing.*
 import io.ktor.server.testing.suites.*
 import io.ktor.server.tomcat.*
 import org.apache.catalina.core.*

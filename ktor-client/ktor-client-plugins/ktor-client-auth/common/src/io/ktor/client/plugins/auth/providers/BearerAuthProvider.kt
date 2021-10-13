@@ -71,6 +71,8 @@ public class BearerAuthProvider(
     private val realm: String?
 ) : AuthProvider {
 
+    @Suppress("OverridingDeprecatedMember")
+    @Deprecated("Please use sendWithoutRequest function instead")
     override val sendWithoutRequest: Boolean
         get() = error("Deprecated")
 

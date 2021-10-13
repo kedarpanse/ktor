@@ -239,6 +239,10 @@ public abstract interface class io/ktor/server/engine/EngineConnectorConfig {
 	public abstract fun getType ()Lio/ktor/server/engine/ConnectorType;
 }
 
+public final class io/ktor/server/engine/EngineConnectorConfigJvmKt {
+	public static final fun sslConnector (Lio/ktor/server/engine/ApplicationEngineEnvironmentBuilder;Ljava/security/KeyStore;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)V
+}
+
 public final class io/ktor/server/engine/EngineConnectorConfigKt {
 	public static final fun connector (Lio/ktor/server/engine/ApplicationEngineEnvironmentBuilder;Lkotlin/jvm/functions/Function1;)V
 	public static final fun sslConnector (Lio/ktor/server/engine/ApplicationEngineEnvironmentBuilder;Ljava/security/KeyStore;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;)V
@@ -324,7 +328,7 @@ public final class io/ktor/server/engine/ShutDownUrl$EnginePlugin : io/ktor/serv
 	public synthetic fun install (Lio/ktor/util/pipeline/Pipeline;Lkotlin/jvm/functions/Function1;)Ljava/lang/Object;
 }
 
-public final class io/ktor/server/engine/ShutdownHookKt {
+public final class io/ktor/server/engine/ShutdownHookJvmKt {
 	public static final fun addShutdownHook (Lio/ktor/server/engine/ApplicationEngine;Lkotlin/jvm/functions/Function0;)V
 }
 
