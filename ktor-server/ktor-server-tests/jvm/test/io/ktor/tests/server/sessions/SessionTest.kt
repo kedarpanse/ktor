@@ -479,7 +479,7 @@ class SessionTest {
         withTestApplication {
             application.install(Sessions) {
                 cookie<TestUserSession>(cookieName, sessionStorage) {
-                    cookie.maxAge = Duration.seconds(durationSeconds)
+                    cookie.maxAge = durationSeconds.seconds
                     identity { (id++).toString() }
                 }
             }
@@ -623,7 +623,7 @@ class SessionTest {
         val transport = SessionTransportCookie(
             "test",
             CookieConfiguration().apply {
-                maxAge = Duration.seconds(Long.MAX_VALUE)
+                maxAge = Long.MAX_VALUE.seconds
             },
             emptyList()
         )
