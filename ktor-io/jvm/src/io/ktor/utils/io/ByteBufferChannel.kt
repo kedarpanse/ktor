@@ -2069,7 +2069,7 @@ internal open class ByteBufferChannel(
     }
 
     override suspend fun readRemaining(limit: Long, headerSizeHint: Int): ByteReadPacket = if (isClosedForWrite) {
-        closedCause?.let { throw rethrowClosed(it) }
+        closedCause?.let { rethrowClosed(it) }
         remainingPacket(limit, headerSizeHint)
     } else {
         readRemainingSuspend(limit, headerSizeHint)
