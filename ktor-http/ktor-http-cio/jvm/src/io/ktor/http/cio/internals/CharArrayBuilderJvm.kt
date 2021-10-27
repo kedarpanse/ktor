@@ -4,14 +4,16 @@
 
 package io.ktor.http.cio.internals
 
-import io.ktor.utils.io.concurrent.*
 import io.ktor.utils.io.pool.*
 import kotlin.math.*
 
 @Suppress("LoopToCallChain", "ReplaceRangeToWithUntil", "KDocMissingDocumentation")
-internal actual class CharArrayBuilder actual constructor(
-    actual val pool: ObjectPool<CharArray>
+internal actual class CharArrayBuilder(
+    val pool: ObjectPool<CharArray> = CharArrayPool
 ) : CharSequence, Appendable {
+
+    actual constructor() : this(CharArrayPool)
+
     private var buffers: MutableList<CharArray>? = null
     private var current: CharArray? = null
     private var stringified: String? = null
