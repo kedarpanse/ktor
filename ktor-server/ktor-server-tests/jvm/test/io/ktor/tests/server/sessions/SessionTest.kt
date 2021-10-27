@@ -53,7 +53,7 @@ class SessionTest {
             application.install(Sessions) {
                 cookie<TestUserSession>(cookieName) {
                     cookie.domain = "foo.bar"
-                    cookie.maxAge = Duration.hours(1)
+                    cookie.maxAge = 1.hours
                 }
             }
 
@@ -605,7 +605,7 @@ class SessionTest {
         val transport = SessionTransportCookie(
             "test",
             CookieConfiguration().apply {
-                maxAge = Duration.days((365 * 100))
+                maxAge = (365 * 100).days
             },
             emptyList()
         )
