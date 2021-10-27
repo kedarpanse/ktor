@@ -5,12 +5,9 @@
 package io.ktor.http.cio.internals
 
 import io.ktor.util.*
-import io.ktor.util.date.*
-import io.ktor.util.internal.LockFreeLinkedListHead
-import io.ktor.util.internal.LockFreeLinkedListNode
+import io.ktor.util.internal.*
 import kotlinx.atomicfu.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.internal.*
 import kotlin.coroutines.*
 import kotlin.coroutines.intrinsics.*
 
@@ -29,9 +26,9 @@ import kotlin.coroutines.intrinsics.*
  */
 @InternalAPI
 @OptIn(InternalCoroutinesApi::class)
-public class WeakTimeoutQueue(
-    public val timeoutMillis: Long,
-    private val clock: () -> Long = { GMTDate().timestamp }
+public actual class WeakTimeoutQueue actual constructor(
+    public actual val timeoutMillis: Long,
+    private val clock: () -> Long
 ) {
     private val head = LockFreeLinkedListHead()
 
@@ -39,29 +36,9 @@ public class WeakTimeoutQueue(
     private var cancelled = false
 
     /**
-     * Register [job] in this queue. It will be cancelled if doesn't complete in time.
+     * Cancel all registered timeouts.
      */
-    public fun register(job: Job): Registration {
-        val now = clock()
-        val head = head
-        if (cancelled) throw CancellationException("Queue is cancelled")
-
-        val cancellable = JobTask(now + timeoutMillis, job)
-        head.addLast(cancellable)
-
-        process(now, head, cancelled)
-        if (cancelled) {
-            cancellable.cancel()
-            throw CancellationException("Queue is cancelled")
-        }
-
-        return cancellable
-    }
-
-    /**
-     * Cancel all registered timeouts
-     */
-    public fun cancel() {
+    public actual fun cancel() {
         cancelled = true
         process()
     }
@@ -69,7 +46,7 @@ public class WeakTimeoutQueue(
     /**
      * Process and cancel all jobs that are timed out
      */
-    public fun process() {
+    public actual fun process() {
         process(clock(), head, cancelled)
     }
 
@@ -87,7 +64,7 @@ public class WeakTimeoutQueue(
      * Unlike the regular kotlinx.coroutines withTimeout,
      * this also checks for cancellation first and fails immediately.
      */
-    public suspend fun <T> withTimeout(block: suspend CoroutineScope.() -> T): T {
+    public actual suspend fun <T> withTimeout(block: suspend CoroutineScope.() -> T): T {
         return suspendCoroutineUninterceptedOrReturn { rawContinuation ->
             if (!rawContinuation.context.isActive) {
                 // fast-path for cancellation with no continuation wrapping
@@ -121,6 +98,26 @@ public class WeakTimeoutQueue(
         }
     }
 
+    /**
+     * Register [job] in this queue. It will be cancelled if doesn't complete in time.
+     */
+    private fun register(job: Job): Registration {
+        val now = clock()
+        val head = head
+        if (cancelled) throw CancellationException("Queue is cancelled")
+
+        val cancellable = JobTask(now + timeoutMillis, job)
+        head.addLast(cancellable)
+
+        process(now, head, cancelled)
+        if (cancelled) {
+            cancellable.cancel()
+            throw CancellationException("Queue is cancelled")
+        }
+
+        return cancellable
+    }
+
     private fun <T> checkCancellation(continuation: Continuation<T>) {
         continuation.context[Job]?.let { job ->
             if (job.isCancelled) {
@@ -130,7 +127,7 @@ public class WeakTimeoutQueue(
         }
     }
 
-    private fun process(now: Long, head: io.ktor.util.internal.LockFreeLinkedListHead, cancelled: Boolean) {
+    private fun process(now: Long, head: LockFreeLinkedListHead, cancelled: Boolean) {
         while (true) {
             val p = head.next as? Cancellable ?: break
             if (!cancelled && p.deadline > now) break
@@ -144,7 +141,7 @@ public class WeakTimeoutQueue(
     /**
      * [register] function result
      */
-    public interface Registration : DisposableHandle {
+    private interface Registration : DisposableHandle {
         public operator fun invoke(cause: Throwable?) {
             dispose()
         }

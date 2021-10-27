@@ -14,6 +14,7 @@ import io.ktor.utils.io.errors.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.channels.*
+import kotlin.native.concurrent.*
 
 /**
  * Start connection HTTP pipeline invoking [handler] for every request.
@@ -34,6 +35,7 @@ public fun CoroutineScope.startServerConnectionPipeline(
 ): Job = launch(HttpPipelineCoroutine) {
     @OptIn(ObsoleteCoroutinesApi::class, ExperimentalCoroutinesApi::class)
     val actorChannel = Channel<ByteReadChannel>(capacity = 3)
+
     launch(
         context = HttpPipelineWriterCoroutine,
         start = CoroutineStart.UNDISPATCHED
@@ -205,12 +207,12 @@ private suspend fun pipelineWriterLoop(
     }
 }
 
-private val BadRequestPacket =
-    RequestResponseBuilder().apply {
-        responseLine("HTTP/1.0", HttpStatusCode.BadRequest.value, "Bad Request")
-        headerLine("Connection", "close")
-        emptyLine()
-    }.build()
+@SharedImmutable
+private val BadRequestPacket = RequestResponseBuilder().apply {
+    responseLine("HTTP/1.0", HttpStatusCode.BadRequest.value, "Bad Request")
+    headerLine("Connection", "close")
+    emptyLine()
+}.build()
 
 internal fun isLastHttpRequest(http11: Boolean, connectionOptions: ConnectionOptions?): Boolean {
     return when {

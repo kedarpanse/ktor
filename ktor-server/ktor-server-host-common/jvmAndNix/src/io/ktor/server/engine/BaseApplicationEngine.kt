@@ -7,12 +7,13 @@ package io.ktor.server.engine
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.internal.*
-import io.ktor.server.engine.internal.currentTimeMillisBridge
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.util.*
 import io.ktor.util.pipeline.*
+import io.ktor.utils.io.concurrent.*
 import kotlinx.coroutines.*
+import kotlin.native.concurrent.*
 
 /**
  * Base class for implementing [ApplicationEngine]
@@ -35,9 +36,10 @@ public abstract class BaseApplicationEngine(
 
     protected val resolvedConnectors: CompletableDeferred<List<EngineConnectorConfig>> = CompletableDeferred()
 
+    private var isFirstLoading by shared(false)
+    private var initializedStartAt by shared(currentTimeMillisBridge())
+
     init {
-        var isFirstLoading = true
-        var initializedStartAt = currentTimeMillisBridge()
         BaseApplicationResponse.setupSendPipeline(pipeline.sendPipeline)
         environment.monitor.subscribe(ApplicationStarting) {
             if (!isFirstLoading) {
@@ -97,6 +99,7 @@ public abstract class BaseApplicationEngine(
     }
 }
 
+@SharedImmutable
 private val SendPipelineExecutedAttributeKey = AttributeKey<Unit>("SendPipelineExecutedAttributeKey")
 
 private suspend fun PipelineContext<Unit, ApplicationCall>.verifyHostHeader() {

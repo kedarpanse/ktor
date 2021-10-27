@@ -16,6 +16,8 @@ expect abstract class EngineTestBase<TEngine : ApplicationEngine, TConfiguration
     applicationEngineFactory: ApplicationEngineFactory<TEngine, TConfiguration>
 ) : CoroutineScope {
 
+    override val coroutineContext: CoroutineContext
+
     @Target(AnnotationTarget.FUNCTION)
     @Retention
     protected annotation class Http2Only()

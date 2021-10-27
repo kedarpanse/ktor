@@ -7,10 +7,12 @@ package io.ktor.http.content
 import io.ktor.http.*
 import io.ktor.util.*
 import io.ktor.util.date.*
+import kotlin.native.concurrent.*
 
 /**
  * Specifies a key for VersionList extension property for [OutgoingContent]
  */
+@SharedImmutable
 public val VersionListProperty: AttributeKey<List<Version>> = AttributeKey("VersionList")
 
 /**

@@ -9,7 +9,9 @@ import io.ktor.http.cio.*
 import io.ktor.http.content.*
 import io.ktor.server.engine.*
 import io.ktor.server.response.*
+import io.ktor.util.collections.*
 import io.ktor.utils.io.*
+import io.ktor.utils.io.concurrent.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.*
 import kotlin.jvm.*
@@ -22,15 +24,13 @@ internal class CIOApplicationResponse(
     private val userDispatcher: CoroutineContext,
     private val upgraded: CompletableDeferred<Boolean>?
 ) : BaseApplicationResponse(call) {
-    private var statusCode: HttpStatusCode = HttpStatusCode.OK
-    private val headersNames = ArrayList<String>()
-    private val headerValues = ArrayList<String>()
+    private var statusCode: HttpStatusCode by shared(HttpStatusCode.OK)
+    private val headersNames = sharedList<String>()
+    private val headerValues = sharedList<String>()
 
-    @Volatile
-    private var chunkedChannel: ByteWriteChannel? = null
+    private var chunkedChannel: ByteWriteChannel? by shared(null)
 
-    @Volatile
-    private var chunkedJob: Job? = null
+    private var chunkedJob: Job? by shared(null)
 
     override val headers = object : ResponseHeaders() {
         override fun engineAppendHeader(name: String, value: String) {

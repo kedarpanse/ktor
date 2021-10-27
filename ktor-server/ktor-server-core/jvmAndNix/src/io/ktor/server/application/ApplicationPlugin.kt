@@ -10,6 +10,7 @@ import io.ktor.util.*
 import io.ktor.util.pipeline.*
 import io.ktor.utils.io.core.*
 import kotlinx.coroutines.*
+import kotlin.native.concurrent.*
 
 /**
  * Defines an installable Plugin
@@ -45,6 +46,7 @@ public interface ApplicationPlugin<
     out TConfiguration : Any,
     TPlugin : Any> : Plugin<TPipeline, TConfiguration, TPlugin>
 
+@SharedImmutable
 internal val pluginRegistryKey = AttributeKey<Attributes>("ApplicationPluginRegistry")
 
 /**

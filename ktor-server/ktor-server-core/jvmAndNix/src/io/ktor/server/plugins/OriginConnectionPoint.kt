@@ -8,6 +8,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.util.*
+import kotlin.native.concurrent.*
 import kotlin.reflect.*
 
 /**
@@ -22,6 +23,7 @@ public val ApplicationRequest.origin: RequestConnectionPoint
  * A key to install a mutable [RequestConnectionPoint]
  */
 @Deprecated("This API will be redesigned as per https://youtrack.jetbrains.com/issue/KTOR-2657")
+@SharedImmutable
 public val MutableOriginConnectionPointKey: AttributeKey<MutableOriginConnectionPoint> =
     AttributeKey("MutableOriginConnectionPointKey")
 

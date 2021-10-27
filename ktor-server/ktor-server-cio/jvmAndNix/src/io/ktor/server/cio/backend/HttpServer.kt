@@ -42,7 +42,9 @@ public fun CoroutineScope.httpServer(
         settings.connectionIdleTimeoutSeconds * 1000L
     )
 
-    val logger = KtorSimpleLogger(HttpServer::class.simpleName ?: HttpServer::class.qualifiedName ?: HttpServer::class.toString())
+    val logger = KtorSimpleLogger(
+        HttpServer::class.simpleName ?: HttpServer::class.qualifiedName ?: HttpServer::class.toString()
+    )
 
     val acceptJob = launch(serverJob + CoroutineName("accept-${settings.port}")) {
         aSocket(selector).tcp().bind(settings.host, settings.port).use { server ->
@@ -68,6 +70,7 @@ public fun CoroutineScope.httpServer(
                         client.remoteAddress,
                         client.localAddress
                     )
+
                     val clientJob = connectionScope.startServerConnectionPipeline(
                         connection,
                         timeout,

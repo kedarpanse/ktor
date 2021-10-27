@@ -22,6 +22,6 @@ public abstract class BaseApplicationCall(final override val application: Applic
      * Put engine response attribute. This is required for base implementation to work properly
      */
     protected fun putResponseAttribute(response: BaseApplicationResponse = this.response) {
-        attributes.put(BaseApplicationResponse.EngineResponseAtributeKey, response)
+        attributes.put(BaseApplicationResponse.EngineResponseAttributeKey, response)
     }
 }

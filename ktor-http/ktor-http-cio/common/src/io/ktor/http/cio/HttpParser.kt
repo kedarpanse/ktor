@@ -48,6 +48,7 @@ public suspend fun parseRequest(input: ByteReadChannel): Request? {
             return Request(method, uri, version, headers, builder)
         }
     } catch (t: Throwable) {
+        println("Parsing: $t")
         builder.release()
         throw t
     }

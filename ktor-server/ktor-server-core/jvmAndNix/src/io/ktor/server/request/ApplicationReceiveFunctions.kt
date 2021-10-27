@@ -13,6 +13,7 @@ import io.ktor.util.*
 import io.ktor.util.pipeline.*
 import io.ktor.util.reflect.*
 import io.ktor.utils.io.*
+import kotlin.native.concurrent.*
 import kotlin.reflect.*
 
 /**
@@ -184,6 +185,7 @@ public typealias ContentTransformationException = io.ktor.server.plugins.Content
  */
 private object DoubleReceivePreventionToken
 
+@SharedImmutable
 private val DoubleReceivePreventionTokenKey = AttributeKey<DoubleReceivePreventionToken>("DoubleReceivePreventionToken")
 
 /**

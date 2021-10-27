@@ -5,8 +5,10 @@
 package io.ktor.server.routing
 
 import io.ktor.server.application.*
+import io.ktor.util.*
+import io.ktor.util.collections.*
 import io.ktor.util.pipeline.*
-import kotlin.jvm.*
+import io.ktor.utils.io.concurrent.*
 
 /**
  * Describes a node in a routing tree.
@@ -41,12 +43,13 @@ public open class Route(
      */
     public val children: List<Route> get() = childList
 
-    private val childList: MutableList<Route> = ArrayList()
+    @OptIn(InternalAPI::class)
+    private val childList: MutableList<Route> = sharedList()
 
-    @Volatile
-    private var cachedPipeline: ApplicationCallPipeline? = null
+    private var cachedPipeline: ApplicationCallPipeline? by shared(null)
 
-    internal val handlers = ArrayList<PipelineInterceptor<Unit, ApplicationCall>>()
+    @OptIn(InternalAPI::class)
+    internal val handlers = sharedList<PipelineInterceptor<Unit, ApplicationCall>>()
 
     /**
      * Creates a child node in this node with a given [selector] or returns an existing one with the same selector
@@ -88,30 +91,28 @@ public open class Route(
         childList.forEach { it.invalidateCachesRecursively() }
     }
 
-    internal fun buildPipeline(): ApplicationCallPipeline {
-        return cachedPipeline ?: run {
-            var current: Route? = this
-            val pipeline = ApplicationCallPipeline(developmentMode, application.environment)
-            val routePipelines = mutableListOf<ApplicationCallPipeline>()
-            while (current != null) {
-                routePipelines.add(current)
-                current = current.parent
-            }
-
-            for (index in routePipelines.lastIndex downTo 0) {
-                val routePipeline = routePipelines[index]
-                pipeline.merge(routePipeline)
-                pipeline.receivePipeline.merge(routePipeline.receivePipeline)
-                pipeline.sendPipeline.merge(routePipeline.sendPipeline)
-            }
-
-            val handlers = handlers
-            for (index in 0..handlers.lastIndex) {
-                pipeline.intercept(Call, handlers[index])
-            }
-            cachedPipeline = pipeline
-            pipeline
+    internal fun buildPipeline(): ApplicationCallPipeline = cachedPipeline ?: run {
+        var current: Route? = this
+        val pipeline = ApplicationCallPipeline(developmentMode, application.environment)
+        val routePipelines = mutableListOf<ApplicationCallPipeline>()
+        while (current != null) {
+            routePipelines.add(current)
+            current = current.parent
         }
+
+        for (index in routePipelines.lastIndex downTo 0) {
+            val routePipeline = routePipelines[index]
+            pipeline.merge(routePipeline)
+            pipeline.receivePipeline.merge(routePipeline.receivePipeline)
+            pipeline.sendPipeline.merge(routePipeline.sendPipeline)
+        }
+
+        val handlers = handlers
+        for (index in 0..handlers.lastIndex) {
+            pipeline.intercept(Call, handlers[index])
+        }
+        cachedPipeline = pipeline
+        pipeline
     }
 
     override fun toString(): String {

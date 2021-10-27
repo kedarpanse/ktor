@@ -9,6 +9,7 @@ import io.ktor.http.cio.internals.*
 import io.ktor.util.*
 import io.ktor.utils.io.*
 import kotlinx.coroutines.*
+import kotlin.native.concurrent.*
 
 /**
  * HTTP request handler function
@@ -24,6 +25,7 @@ public typealias HttpRequestHandler = suspend ServerRequestScope.(
     "This is an implementation detail and will become internal in future releases.",
     level = DeprecationLevel.ERROR
 )
+@SharedImmutable
 public val HttpPipelineCoroutine: CoroutineName = CoroutineName("http-pipeline")
 
 /**
@@ -33,6 +35,7 @@ public val HttpPipelineCoroutine: CoroutineName = CoroutineName("http-pipeline")
     "This is an implementation detail and will become internal in future releases.",
     level = DeprecationLevel.ERROR
 )
+@SharedImmutable
 public val HttpPipelineWriterCoroutine: CoroutineName = CoroutineName("http-pipeline-writer")
 
 /**
@@ -42,38 +45,5 @@ public val HttpPipelineWriterCoroutine: CoroutineName = CoroutineName("http-pipe
     "This is an implementation detail and will become internal in future releases.",
     level = DeprecationLevel.ERROR
 )
+@SharedImmutable
 public val RequestHandlerCoroutine: CoroutineName = CoroutineName("request-handler")
-
-/**
- * Start connection HTTP pipeline invoking [handler] for every request.
- * Note that [handler] could be invoked multiple times concurrently due to HTTP pipeline nature
- *
- * @param input incoming channel
- * @param output outgoing bytes channel
- * @param timeout number of IDLE seconds after the connection will be closed
- * @param handler to be invoked for every incoming request
- *
- * @return pipeline job
- */
-@OptIn(InternalAPI::class)
-@Deprecated(
-    "This is going to become internal. " +
-        "Start ktor server or raw cio server from ktor-server-cio module instead of constructing server from parts.",
-    level = DeprecationLevel.ERROR
-)
-public fun CoroutineScope.startConnectionPipeline(
-    input: ByteReadChannel,
-    output: ByteWriteChannel,
-    timeout: WeakTimeoutQueue,
-    handler: suspend CoroutineScope.(
-        request: Request,
-        input: ByteReadChannel,
-        output: ByteWriteChannel,
-        upgraded: CompletableDeferred<Boolean>?
-    ) -> Unit
-): Job {
-    val pipeline = ServerIncomingConnection(input, output, null, null)
-    return startServerConnectionPipeline(pipeline, timeout) { request ->
-        handler(this, request, input, output, upgraded)
-    }
-}

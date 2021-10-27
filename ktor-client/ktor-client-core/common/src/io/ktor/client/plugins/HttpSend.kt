@@ -10,6 +10,7 @@ import io.ktor.client.request.*
 import io.ktor.client.utils.*
 import io.ktor.http.content.*
 import io.ktor.util.*
+import io.ktor.util.collections.*
 import io.ktor.utils.io.*
 import io.ktor.utils.io.concurrent.*
 import kotlinx.coroutines.*
@@ -38,6 +39,7 @@ public class HttpSend(
 ) {
     public var maxSendCount: Int by shared(maxSendCount)
 
+    @OptIn(InternalAPI::class)
     private val interceptors: MutableList<HttpSendInterceptor> = sharedList()
 
     init {

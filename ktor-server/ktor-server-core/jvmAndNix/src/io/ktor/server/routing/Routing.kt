@@ -11,9 +11,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.util.*
 import io.ktor.util.pipeline.*
-import kotlinx.coroutines.*
+import kotlin.native.concurrent.*
 
 @InternalAPI
+@SharedImmutable
 public val RoutingFailureStatusCode: AttributeKey<HttpStatusCode> = AttributeKey("RoutingFailureStatusCode")
 
 /**

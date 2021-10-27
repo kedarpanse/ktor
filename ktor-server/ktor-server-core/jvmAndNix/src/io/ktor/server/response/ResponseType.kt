@@ -6,7 +6,9 @@ package io.ktor.server.response
 
 import io.ktor.util.*
 import io.ktor.util.reflect.*
+import kotlin.native.concurrent.*
 
+@SharedImmutable
 private val ResponseTypeAttributeKey: AttributeKey<TypeInfo> = AttributeKey("ResponseTypeAttributeKey")
 
 /**

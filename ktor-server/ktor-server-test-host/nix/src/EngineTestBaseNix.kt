@@ -24,7 +24,7 @@ actual abstract class EngineTestBase<TEngine : ApplicationEngine, TConfiguration
     actual val applicationEngineFactory: ApplicationEngineFactory<TEngine, TConfiguration>
 ) : CoroutineScope {
     private val testJob = Job()
-    override val coroutineContext: CoroutineContext = testJob + Dispatchers.Default
+    actual override val coroutineContext: CoroutineContext = testJob + Dispatchers.Default
 
     protected val exceptions = ConcurrentList<Throwable>()
 
@@ -85,6 +85,7 @@ actual abstract class EngineTestBase<TEngine : ApplicationEngine, TConfiguration
         return embeddedServer(applicationEngineFactory, environment)
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     protected fun startServer(server: TEngine): List<Throwable> {
         this.server = server
 

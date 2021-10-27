@@ -69,7 +69,7 @@ actual abstract class EngineTestBase<
     @Retention
     protected annotation class NoHttp2
 
-    override val coroutineContext: CoroutineContext
+    actual override val coroutineContext: CoroutineContext
         get() = testJob + testDispatcher
 
     @get:Rule
