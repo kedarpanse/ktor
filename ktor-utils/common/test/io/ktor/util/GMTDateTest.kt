@@ -51,9 +51,9 @@ class GMTDateTest {
     @Test
     fun testDurationArithmetic() {
         val now = GMTDate()
-        val plus10Secs = now + Duration.seconds(10)
+        val plus10Secs = now + 10.seconds
         assertTrue { now < plus10Secs }
         assertEquals(now.plus(10_000), plus10Secs)
-        assertEquals(now, plus10Secs - Duration.seconds(10))
+        assertEquals(now, plus10Secs - 10.seconds)
     }
 }
