@@ -15,7 +15,7 @@ apiValidation {
 
     if (rootProject.ext.native_targets_enabled) {
         excludeList += [
-//            'ktor-client-curl',
+            'ktor-client-curl',
             'ktor-client-ios',
         ]
     }

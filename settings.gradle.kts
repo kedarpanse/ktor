@@ -64,7 +64,7 @@ include(":ktor-client:ktor-client-apache")
 include(":ktor-client:ktor-client-android")
 include(":ktor-client:ktor-client-cio")
 if (native_targets_enabled) {
-//    include(":ktor-client:ktor-client-curl")
+    include(":ktor-client:ktor-client-curl")
     include(":ktor-client:ktor-client-ios")
 }
 if (currentJdk >= 11) {
