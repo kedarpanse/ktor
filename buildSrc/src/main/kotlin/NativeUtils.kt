@@ -41,6 +41,25 @@ fun KotlinMultiplatformExtension.desktopTargets(): Set<KotlinNativeTarget> = set
     mingwX64()
 )
 
+fun KotlinMultiplatformExtension.nixX86Targets(): Set<KotlinNativeTarget> = setOf(
+    iosArm32(),
+    watchosX86(),
+    watchosArm32()
+)
+
+fun KotlinMultiplatformExtension.nixX64Targets(): Set<KotlinNativeTarget> = setOf(
+    linuxX64(),
+    iosSimulatorArm64(),
+    watchosX64(),
+    watchosArm64(),
+    watchosSimulatorArm64(),
+    tvosX64(),
+    tvosArm64(),
+    tvosSimulatorArm64(),
+    macosX64(),
+    macosArm64()
+)
+
 fun Project.disableCompilation(target: KotlinNativeTarget) {
     target.apply {
 

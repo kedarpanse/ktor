@@ -194,5 +194,12 @@ internal class SelectorHelper {
     }
 }
 
+internal expect fun pselect_bridge(
+    maxDescriptors: Int,
+    readSet: CPointer<fd_set>,
+    writeSet: CPointer<fd_set>,
+    errorSet: CPointer<fd_set>,
+): Int
+
 @Deprecated("This will not be thrown since 2.0.0.")
 public class SocketError : IllegalStateException()

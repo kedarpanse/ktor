@@ -24,6 +24,20 @@ kotlin {
             }
         }
 
+        // val nixX86Main by creating {
+        // }
+
+        // val nixX64Main by creating {
+        // }
+
+        // nixX64Targets().forEach {
+        //     getByName("${it.name}Main").dependsOn(nixX64Main)
+        // }
+
+        // nixX86Targets().forEach {
+        //     getByName("${it.name}Main").dependsOn(nixX86Main)
+        // }
+
         val jvmTest by getting {
             dependencies {
                 implementation("io.mockk:mockk:$mockk_version")
